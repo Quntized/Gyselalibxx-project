@@ -1,0 +1,4 @@
+[submodule "external/gyselalibxx"]
+	path = external/gyselalibxx
+	url = https://github.com/Quntized/gyselalibxx.git
+	branch = gysela-mine
