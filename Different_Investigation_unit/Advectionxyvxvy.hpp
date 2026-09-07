@@ -11,6 +11,7 @@
 #include "rk2.hpp"
 #include "spline_interpolation.hpp"
 #include "vector_field_common.hpp"
+#include "i_interpolation.hpp"
 
 namespace Test{
 
@@ -39,8 +40,8 @@ struct BSplinesX : ddc::UniformBSplines<X,3>
 struct BSplinesY : ddc::UniformBSplines<Y,3>
 {
 };
-ddc::SplineBuilderClosure constexpr SplineXClosure = ddc::SplineBuilderCloser::PERIODIC;
-ddc::SplineBuilderCloser constexpr SplineYClosure = ddc::SplineBuilderCloser::PERIODIC;
+ddc::SplineBuilderClosure constexpr SplineXClosure = ddc::SplineBuilderClosure::PERIODIC;
+ddc::SplineBuilderClosure constexpr SplineYClosure = ddc::SplineBuilderClosure::PERIODIC;
 struct GridX : UniformGridBase<X>
 {
 };
@@ -53,7 +54,7 @@ struct GridVx : UniformGridBase<Vx>
 struct GridVy : UniformGridBase<Vy>
 {
 };
-using GravilleX = ddc::GravilleInterpolationPoints<BSplinesX,SplineXClosure,SplineXClosure>;
+using GravilleX = ddc::GrevilleInterpolationPoints<BSplinesX,SplineXClosure,SplineXClosure>;
 using GrevilleY = ddc::GrevilleInterpolationPoints<BSplinesY,SplineYClosure,SplineYClosure>;
 using IdxXY = Idx<GridX>;
 using IdxVx = Idx<GridVx>;
@@ -76,9 +77,9 @@ using FieldMemXYVxVy = FieldMem<double,IdxRangeXYVxVy>;
 using FieldXYVxVy = Field<double,IdxRangeXYVxVy>;
 using SplineInterpolatorX = SplineInterpolator<
         Kokkos::DefaultExecutionSpace,
-        BSplineX,
+        BSplinesX,
         GridX,
-        ExtrapolationRule::Periodic,
+        ExtrapolationRule::PERIODIC,
         SplineXClosure,
         SplineXClosure
     >;
@@ -86,11 +87,11 @@ using SplineInterpolatorY = SplineInterpolator<
         Kokkos::DefaultExecutionSpace,
         BSplinesY,
         GridY,
-        ExtrapolationRule::Periodic,
+        ExtrapolationRule::PERIODIC,
         SplineYClosure,
         SplineYClosure
     >;
-TEST(case_01,xyvxvy){
+void run_test(){
 static constexpr CoordX x_min(-0.5);
 static constexpr CoordX x_max(0.5);
 static constexpr IdxStepX x_size(64);
@@ -120,7 +121,7 @@ BslAdvection1D<
         SplineInterpolatorX,
         SplineInterpolatorX,
         RK2Builder
-    > const advection_x(spline_interpolation_x,);
+    > const advection_x(spline_interpolation_x,time_stepper);
 BslAdvection1D<
         GridY,
         IdxRangeXY,
@@ -147,19 +148,19 @@ ddc::parallel_for_each(
         double const r1 = Kokkos::sqrt((x - xc)*(x - xc) + 8*(y-yc) * (y-yc));
         double const r2 = Kokkos::sqrt(8*(x - xc)*(x-xc) + (y-yc)*(y-yc));
         double const G1 = Kokkos::pow(Kokkos::cos(3.1416 * r1 / 2. / a),4) * (Kokkos::abs(r1)<a);
-        double const G2 = Kokkos::pow(Kokkos::cos(3.1416 * r2 /2. a),4)* (Kokkos::abs(r2)<a);
+        double const G2 = Kokkos::pow(Kokkos::cos(3.1416 * r2 /2./ a),4)* (Kokkos::abs(r2)<a);
         function(idx) = 0.5 *(G1 + G2);
     }
 );
 FieldMemXY advection_field_x_alloc(xy_grid);
 FieldXY advection_field_x = get_field(advection_field_x_alloc);
 FieldMemXY advection_field_y_alloc(xy_grid);
-FieldXY advect_field_y = get_field(advection_field_y_alloc);
+FieldXY advection_field_y = get_field(advection_field_y_alloc);
 ddc::parallel_for_each(
     Kokkos::DefaultExecutionSpace(),
     xy_grid,
     KOKKOS_LAMBDA(const IdxXY idx){
-        CoordXY coordxy(ddc::coordinate(idx));
+        CoordXY coord_xy(ddc::coordinate(idx));
         double const x = CoordX(coordxy);
         advection_field_x(idx) = Kokkos::sin(x * 2 * 3.1416)/3.1416 / 2.;
         double const y = CoordY(coord_xy);
@@ -184,7 +185,7 @@ ddc::host_for_each(xyvxvy_grid,[&](IdxXYVxVy const idx){
         double const r1 = std::sqrt((x - xc)*(x - xc) + 8*(y-yc) * (y-yc));
         double const r2 = std::sqrt(8*(x - xc)*(x-xc) + (y-yc)*(y-yc));
         double const G1 = std::pow(std::cos(3.1416 * r1 / 2. / a),4) * (std::abs(r1)<a);
-        double const G2 = std::pow(std::cos(3.1416 * r2 /2. a),4)* (std::abs(r2)<a);
+        double const G2 = std::pow(std::cos(3.1416 * r2 /2./ a),4)* (std::abs(r2)<a);
         exact_function(idx) = 0.5 *(G1 + G2);
     }
 );
@@ -199,7 +200,8 @@ ddc::host_for_each(xyvxvy_grid,[&](IdxXYVxVy const idx){
     double const relative_error = std::abs(function_host(idx) - exact_function(idx));
     max_relative_error = max_relative_error > relative_error ? max_relative_error : relative_error;
 });
-
-
+}
+TEST(case_01, XYVXVY_BSL_ADV_1D){
+    run_test();
 }
 }

@@ -11,3 +11,5 @@ set(GYSELALIBXX_ENABLE_DEPRECATED OFF)
 
 add_subdirectory(external/gyselalibxx)
 set(CMAKE_CXX_FLAGS "${GYSELALIBXX_DEFAULT_CXX_FLAGS} ${CMAKE_CXX_FLAGS}")
+add_subdirectory(src/)
+add_subdirectory(apps/)
