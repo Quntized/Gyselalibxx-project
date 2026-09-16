@@ -1,0 +1,30 @@
+// SPDX-License-Identifier: MIT
+
+#pragma once
+
+constexpr char const* const params_yaml = R"PDI_CFG(SplineMesh:
+  r_ncells: 128
+  r_min: 0.0
+  r_max: 1.0
+  theta_ncells: 256
+  theta_min: 0.0
+  theta_max: 6.283185307179586
+
+Time:
+  delta_t: 0.1
+  final_T: 100.
+
+CzarnyMapping:
+  epsilon: 0.3
+  e: 1.4
+  x0: 6.1
+  y0: 0.3
+
+Perturbation:
+  sigma: 0.2
+  l_mode: 3
+  eps: 0.01
+
+Output:
+  time_step_diag: 10
+)PDI_CFG";
