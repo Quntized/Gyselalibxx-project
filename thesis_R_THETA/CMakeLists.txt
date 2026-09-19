@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.25)
 add_executable(thesis_r_theta
     core.cpp
     initialisation/maxwellianequilibrium.cpp
+    initialisation/singlemodeperturbinitialisation.cpp
     poisson/chargedensitycalculator.cpp
     poisson/qnsolver.cpp
     time_integration/predcorr.cpp

@@ -33,8 +33,8 @@ void QNSolver::operator()(
     m_compute_rho(get_field(rho), allfdistribu);
 
     m_solve_poisson(electrostatic_potential, get_const_field(rho));
-    ddc::parallel_fill(ddcHelper::get<X>(electric_field), 0.);
-    ddc::parallel_fill(ddcHelper::get<Y>(electric_field), 0.);
+    //ddc::parallel_fill(ddcHelper::get<X>(electric_field), 0.);
+    //ddc::parallel_fill(ddcHelper::get<Y>(electric_field), 0.);
 
     Kokkos::Profiling::popRegion();
 }
