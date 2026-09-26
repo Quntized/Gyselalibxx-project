@@ -22,7 +22,7 @@ def parsing():
     parser.add_argument("--batch_size", type=int, default=128)
     parser.add_argument("--tag", type = str, default = "")
     parser.add_argument("--lr", type = float, default= 2e-4)
-    parser.add_argument("--verbose", type=int, default=8)
+    parser.add_argument("--verbose", type=int, default=4)
     parser.add_argument("--test_shot_num", type = int, default = 999)
     parser.add_argument("--num_workers", type = int, default = 4)
     parser.add_argument("--max_norm_grad", type = float, default = 1.0)
