@@ -19,15 +19,15 @@ def evaluate(
     pts = []
     gts = []
 
-    for batch_idx, (data_0D, data_ctrl, target_0D, target_ctrl) in enumerate(test_loader):
+    for batch_idx, (data_0D, data_ctrl, target_0D, target_ctrl, label) in enumerate(test_loader):
         with torch.no_grad():
             optimizer.zero_grad()
             output = model(data_0D.to(device), data_ctrl.to(device), target_0D.to(device), target_ctrl.to(device))
-            loss = loss_fn(output, target_0D.to(device))
+            loss = loss_fn(output, label.to(device))
             test_loss += loss.item()
             
             pts.append(output.cpu().numpy().reshape(-1, output.size()[-1]))
-            gts.append(target_0D.cpu().numpy().reshape(-1, target_0D.size()[-1]))
+            gts.append(label.cpu().numpy().reshape(-1, label.size()[-1]))
             
     test_loss /= (batch_idx + 1)
     
@@ -37,4 +37,3 @@ def evaluate(
     mse, rmse, mae, r2 = compute_metrics(gts,pts,None,is_print)
 
     return test_loss, mse, rmse, mae, r2
-

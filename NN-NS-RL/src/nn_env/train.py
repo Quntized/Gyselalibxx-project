@@ -5,7 +5,7 @@ from tqdm.auto import tqdm
 from torch.utils.data import DataLoader
 from src.nn_env.metric import compute_metrics
 from src.nn_env.evaluate import evaluate
-from src.nn_env.predict import  predict_from_self_tensorboard
+from src.nn_env.predict import  predict_from_self_tensorboard,predict_tensorboard
 from torch.utils.tensorboard import SummaryWriter
 
 def train_per_epoch(
@@ -23,14 +23,14 @@ def train_per_epoch(
 
     train_loss = 0
 
-    for batch_idx, (data_0D, data_ctrl, target_0D, target_ctrl) in enumerate(train_loader):
+    for batch_idx, (data_0D, data_ctrl, target_0D, target_ctrl, label) in enumerate(train_loader):
         
         if data_0D.size()[0] <= 1:
             continue
         
         optimizer.zero_grad()
         output = model(data_0D.to(device), data_ctrl.to(device), target_0D.to(device),target_ctrl.to(device))
-        loss = loss_fn(output, target_0D.to(device))
+        loss = loss_fn(output, label.to(device))
         
         if not torch.isfinite(loss):
             print("train_per_epoch | warning : loss nan occurs")
@@ -66,13 +66,13 @@ def valid_per_epoch(
     model.to(device)
     valid_loss = 0
     
-    for batch_idx, (data_0D, data_ctrl, target_0D, target_ctrl) in enumerate(valid_loader):
+    for batch_idx, (data_0D, data_ctrl, target_0D, target_ctrl, label) in enumerate(valid_loader):
         with torch.no_grad():
             if data_0D.size()[0] <= 1:
                 continue
             
             output = model(data_0D.to(device), data_ctrl.to(device), target_0D.to(device), target_ctrl.to(device))
-            loss = loss_fn(output, target_0D.to(device))
+            loss = loss_fn(output, label.to(device))
             
             valid_loss += loss.item()
         
@@ -152,7 +152,7 @@ def train(
                                         }, 
                                         epoch + 1)
                     
-                    fig = predict_from_self_tensorboard(model, test_for_check_per_epoch.dataset, device)
+                    fig = predict_tensorboard(model, test_for_check_per_epoch.dataset, device)
                     
                     # model performance check in tensorboard
                     writer.add_figure('model performance', fig, epoch+1)

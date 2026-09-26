@@ -1,0 +1,50 @@
+Algorithm:
+  deltat: 0.0025
+  equilibrium: bump_on_tail
+  nbiter: 20000
+Collisions:
+  nustar0: 0.1
+KineticSource:
+  amplitude: 1.0
+  density: 0.0
+  energy: 0.03026528268976092
+  extent: 0.39495856834584514
+  stiffness: 7.443499957052392
+  temperature: 1.0
+KrookConstant:
+  amplitude: 10.0
+  density: 1.0
+  extent: 0.1
+  stiffness: 5.0
+  temperature: 1.0
+  type: Sink
+Output:
+  time_diag: 0.25
+SpeciesInfo:
+- charge: -1.0
+  density_eq: 1.0
+  epsilon_bot: 0.1
+  mass: 0.0005
+  mean_velocity_bot: 3.8
+  mean_velocity_eq: 0.0
+  perturb_amplitude: 0.01
+  perturb_mode: 1
+  temperature_bot: 0.2
+  temperature_eq: 1.0
+- charge: 1.0
+  density_eq: 1.0
+  epsilon_bot: 0.1
+  mass: 2.0
+  mean_velocity_bot: 3.8
+  mean_velocity_eq: 0.0
+  perturb_amplitude: 0.01
+  perturb_mode: 1
+  temperature_bot: 0.2
+  temperature_eq: 1.0
+SplineMesh:
+  vx_max: 8.0
+  vx_min: -8.0
+  vx_ncells: 127
+  x_max: 12.56637061435917
+  x_min: 0.0
+  x_ncells: 128

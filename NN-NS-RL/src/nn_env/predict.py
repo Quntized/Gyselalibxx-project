@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import torch
 import numpy as np
 import random
+from src.nn_env.dataset import DatasetFor0D
 
 def predict_from_self_tensorboard(
     model: torch.nn.Module,
@@ -97,6 +98,79 @@ def predict_from_self_tensorboard(
         ax.grid(True, linestyle='--', alpha=0.6)
         if i == 0:
             ax.legend(loc="upper right")
+
+    fig.tight_layout()
+    return fig
+
+def predict_tensorboard(
+    model: torch.nn.Module,
+    test_data: DatasetFor0D,
+    device: str = 'cpu',
+):
+    model.to(device)
+    model.eval()
+
+    seq_len_0D = model.input_seq_len
+    pred_len_0D = model.output_pred_len
+    seq_len_ctrl = seq_len_0D + pred_len_0D
+    shot_list = np.unique(test_data.ts_data.shot.values)
+
+    is_shot_valid = False
+    while not is_shot_valid:
+        shot_num = random.choice(shot_list)
+        df_shot = test_data.ts_data[test_data.ts_data.shot == shot_num].reset_index(drop=True)
+        idx_max = len(df_shot) - pred_len_0D - seq_len_0D
+        is_shot_valid = idx_max >= 130   # magic-number floor, kept as in original
+
+    cols_0D = test_data.cols_0D
+    cols_ctrl = test_data.cols_ctrl
+    time_x = df_shot['time']
+    data_0D = df_shot[cols_0D]
+    data_ctrl = df_shot[cols_ctrl]
+
+    predictions = []
+    idx = 0
+    while idx < idx_max:
+        with torch.no_grad():
+            input_0D = torch.from_numpy(
+                data_0D.iloc[idx + 1: idx + 1 + seq_len_0D].values
+            ).float().unsqueeze(0)
+            input_ctrl = torch.from_numpy(
+                data_ctrl.iloc[idx + 1: idx +1 + seq_len_ctrl].values
+            ).float().unsqueeze(0)
+
+            # boundary / decoder seed  matches dataset.__getitem__ target_0D
+            target_0D = torch.from_numpy(
+                data_0D.iloc[idx + seq_len_0D: idx + seq_len_0D + pred_len_0D].values
+            ).float().unsqueeze(0)
+            # known future control  matches dataset.__getitem__ target_ctrl
+            target_ctrl = torch.from_numpy(
+                data_ctrl.iloc[idx + seq_len_0D : idx + seq_len_0D + pred_len_0D].values
+            ).float().unsqueeze(0)
+
+            outputs = model(
+                input_0D.to(device), input_ctrl.to(device),
+                target_0D.to(device), target_ctrl.to(device),
+            ).squeeze(0).cpu().numpy()
+
+        predictions.append(outputs)
+        idx += pred_len_0D
+
+    predictions = np.concatenate(predictions, axis=0)
+    time_x = time_x.iloc[seq_len_0D + 1: seq_len_0D + 1 + len(predictions)].values
+    actual = data_0D.iloc[seq_len_0D + 1: seq_len_0D  + 1 + len(predictions)].values
+
+    if test_data.scaler_0D:
+        predictions = test_data.scaler_0D.inverse_transform(predictions)
+        actual = test_data.scaler_0D.inverse_transform(actual)
+
+    fig, axes = plt.subplots(len(cols_0D), 1, figsize=(10, 6), sharex=True, facecolor='white')
+    plt.suptitle("shot : {} - walk-forward (true-history) prediction".format(shot_num))
+    for ax, col, i in zip(axes.ravel(), cols_0D, range(len(cols_0D))):
+        ax.plot(time_x, actual[:, i], 'k', label="actual")
+        ax.plot(time_x, predictions[:, i], 'b', label="pred")
+        ax.set_ylabel(col.replace('_', ' ').title())
+        ax.legend(loc="upper right")
 
     fig.tight_layout()
     return fig
