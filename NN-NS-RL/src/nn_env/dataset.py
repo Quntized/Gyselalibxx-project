@@ -9,10 +9,10 @@ from tqdm import tqdm
 from typing import Optional, Dict, List, Union, Literal
 
 DEFAULT_COLS = [
-    'density_max', 'density_mean', 'temperature_max', 'velocity_max'
+    'mean_te', 'mean_ti', 'mean_ne', 'mean_ni'
 ]
 DEFAULT_CTRL_COLS = [
-    'beam_temp', 'beam_vel', 'perturb_amp'
+    'krook_amplitude', 'kin_energy', 'kin_extent', 'kin_stiffness', 'krook_extent', 'krook_stiffness', 'nustar0', 'epsilon_bot', 'temperature_bot', 'mean_velocity_bot', 'perturb_amplitude'
 ]
 
 
@@ -54,6 +54,7 @@ class DatasetFor0D(Dataset):
                 if c > 0.5 * len(df_shot):
                     shot_ignore.append(shot)
                     break
+            
 
         shot_list_new = [s for s in self.shot_list if s not in shot_ignore]
         self.shot_list = shot_list_new
@@ -75,7 +76,7 @@ class DatasetFor0D(Dataset):
             target_indices = []
             df_shot = self.ts_data[self.ts_data.shot == shot].reset_index(drop=True)
             n = len(df_shot)
-            idx_last = n - self.seq_len - self.pred_len
+            idx_last = n - self.seq_len - self.pred_len - 1
             if idx_last < 0:
                 continue
 

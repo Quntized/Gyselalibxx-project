@@ -363,7 +363,8 @@ class NStransformer(nn.Module):
         # x_0D = x_0D.permute(1,0,2)
         x, _ = self.trans_enc(x, self.src_mask.to(x.device), tau, delta)
         
-        # Decoder process
+        # Decoder process — normalize target_0D with the same statistics as the encoder
+        target_0D = (target_0D - means_0D) / stdev_0D
         target_0D = self.noise(target_0D)
         target = torch.concat([target_0D, target_ctrl], axis = 2)
         target = target.permute(0, 2, 1)

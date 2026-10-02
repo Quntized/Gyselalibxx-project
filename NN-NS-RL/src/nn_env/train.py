@@ -140,7 +140,7 @@ def train(
                 if test_for_check_per_epoch:
                     model.eval()
                     # evaluate metric in tensorboard
-                    test_loss, mse, rmse, mae, r2 = evaluate(test_for_check_per_epoch, model, optimizer, loss_fn, device, False)
+                    test_loss, mse, rmse, mae, r2 = evaluate(test_for_check_per_epoch, model, optimizer, loss_fn, device, True)
                    
                     writer.add_scalars('test', 
                                         {

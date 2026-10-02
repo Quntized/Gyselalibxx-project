@@ -1,8 +1,8 @@
 class Config():
 
     input_params = {
-        "state":['density_max', 'density_mean', 'temperature_max', 'velocity_max'],
-        "control":['beam_temp', 'beam_vel', 'perturb_amp']
+        "state":['mean_te', 'mean_ti', 'mean_ne', 'mean_ni'],
+        "control":['krook_amplitude', 'kin_energy', 'kin_extent','kin_stiffness','krook_extent','krook_stiffness','nustar0','epsilon_bot','temperature_bot','mean_velocity_bot','perturb_amplitude']
     }
 
     model_config = {
@@ -15,7 +15,7 @@ class Config():
             "feature_0D_dim" : 128,
             "feature_ctrl_dim": 128,
             "noise_mean" : 0,
-            "noise_std" : 1.96,
+            "noise_std" : 0.01,
             "kernel_size" : 3,
         }
     }

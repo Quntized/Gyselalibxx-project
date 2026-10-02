@@ -25,7 +25,7 @@ def predict_from_self_tensorboard(
         
         # Ensure the shot has enough frames for an initial sequence + at least 32 prediction steps
         idx_max = len(df_shot) - pred_len_0D - seq_len_0D
-        if idx_max >= 32:
+        if idx_max >= 19:
             is_shot_valid = True
             
     model.to(device)
@@ -120,11 +120,11 @@ def predict_tensorboard(
         shot_num = random.choice(shot_list)
         df_shot = test_data.ts_data[test_data.ts_data.shot == shot_num].reset_index(drop=True)
         idx_max = len(df_shot) - pred_len_0D - seq_len_0D
-        is_shot_valid = idx_max >= 130   # magic-number floor, kept as in original
+        is_shot_valid = idx_max >= 5  # magic-number floor, kept as in original
 
     cols_0D = test_data.cols_0D
     cols_ctrl = test_data.cols_ctrl
-    time_x = df_shot['time']
+    time_x = df_shot['time_val']
     data_0D = df_shot[cols_0D]
     data_ctrl = df_shot[cols_ctrl]
 
