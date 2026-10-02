@@ -29,16 +29,16 @@ def parsing():
     parser.add_argument("--gpu_num", type = int, default = 0)
     parser.add_argument("--model", type = str, default = "NStransformer", choices = ['NStransformer'])
     parser.add_argument("--gamma",type = float, default = 0.95)
-    parser.add_argument("--step_size", type = int, default=8)
+    parser.add_argument("--step_size", type = int, default=32)
     parser.add_argument("--root_dir", type=str, default = "./weights/")
-    parser.add_argument("--seq_len", type = int, default = 10)
-    parser.add_argument("--pred_len", type = int, default = 1)
-    parser.add_argument("--interval", type = int, default = 3)
+    parser.add_argument("--seq_len", type = int, default = 5)
+    parser.add_argument("--pred_len", type = int, default = 2)
+    parser.add_argument("--interval", type = int, default = 1)
     parser.add_argument("--use_forgetting", type = bool, default = False)
     parser.add_argument("--scale_forgetting", type = float, default = 0.1)
     parser.add_argument("--use_scaler", type = bool, default = True)
-    parser.add_argument("--num_epoch", type = int, default = 32)
-    parser.add_argument("--scaler", type = str, default = 'Robust', choices = ['Standard', 'Robust', 'MinMax'])
+    parser.add_argument("--num_epoch", type = int, default = 128)
+    parser.add_argument("--scaler", type = str, default = 'Standard', choices = ['Standard', 'Robust', 'MinMax'])
     args = vars(parser.parse_args())
     return args
 
@@ -58,7 +58,8 @@ if __name__ == "__main__":
     else:
         device = 'cpu'
 
-    df = pd.read_csv("/home/sajid/NS_Vlasov_2D/plasma_0D_dataset.csv").reset_index()
+    df = pd.read_csv("/home/sajid/NS_Vlasov_2D/master_trajectory_dataset.csv").reset_index()
+    print("Total row of my data: ", len(df))
     config = Config()
     cols_0D = config.input_params['state']
     cols_control = config.input_params['control']
@@ -78,9 +79,9 @@ if __name__ == "__main__":
     print("valid data : ", valid_data.__len__())
     print("test data : ", test_data.__len__())
 
-    train_loader = DataLoader(train_data, batch_size = batch_size, num_workers = args['num_workers'], shuffle = True, pin_memory = True)
-    valid_loader = DataLoader(valid_data, batch_size = batch_size, num_workers = args['num_workers'], shuffle = False, pin_memory = True)
-    test_loader = DataLoader(test_data, batch_size = batch_size, num_workers = args['num_workers'], shuffle = False, pin_memory = True)
+    train_loader = DataLoader(train_data, batch_size = batch_size, num_workers = args['num_workers'], shuffle = True, pin_memory = True, drop_last = True)
+    valid_loader = DataLoader(valid_data, batch_size = batch_size, num_workers = args['num_workers'], shuffle = False, pin_memory = True, drop_last = True)
+    test_loader = DataLoader(test_data, batch_size = batch_size, num_workers = args['num_workers'], shuffle = False, pin_memory = True, drop_last = True)
 
     ts_data = pd.concat([train_data.ts_data, valid_data.ts_data, test_data.ts_data], axis = 0)
     range_info = get_range_of_output(ts_data, cols_0D)
