@@ -4,9 +4,12 @@ So far the results are :
 training process finished, best loss : 0.005, best epoch : 122
 | mse : 0.001 | rmse : 0.019 | mae : 0.007 | r2-score : 0.999
 
-I need to work on r2-score, that seems problematic to me,
+I need to work on r2-score, that seems problematic to me. 
 
 Here are the result:
 ![Prediction vs Actual on Max cases](mn_Te_Ti_Ne_Ni.png)
 ![Train loss](Loss.png)
 ![Valid loss](Loss_2.png)
+
+Currently, a larger dataset generating in my University lab computer, will update later when i find good results.
+
