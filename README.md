@@ -4,7 +4,6 @@ This work has been dedicated to my Thesis. At the moment this repository contain
 > [!WARNING]
 > **Work In Progress (WIP)**
 
-<<<<<<< Updated upstream
 
 ## List of contributions that i made in gyselalibxx library:
 
