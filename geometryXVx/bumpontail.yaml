@@ -1,0 +1,44 @@
+SplineMesh:
+  x_min: 0.0
+  x_max: 50.
+  x_ncells: 256
+  vx_min: -8.0
+  vx_max: +8.0
+  vx_ncells: 127
+
+SpeciesInfo:
+- charge: -1.
+  mass: 0.0005
+  epsilon_bot: 0.1
+  temperature_bot: 0.2 # [ .1 ; .5 ]
+  mean_velocity_bot: 3.8 # [ 2 ; 6 ]
+  perturb_amplitude: 0.00001 # [ 0 ; 0.001 ]
+  perturb_mode: 3
+
+Algorithm:
+  equilibrium: "bump_on_tail"
+  deltat: 0.1
+  nbiter: 600
+Collisions:
+  nustar0: 0.1
+
+KrookConstant:
+  type: "Sink"      
+  extent: 0.1      
+  stiffness: 5.0    
+  amplitude: 10.0   
+  density: 1.0      
+  temperature: 1.0  
+
+
+KineticSource:
+  extent: 0.2      
+  stiffness: 5.0   
+  amplitude: 1.0   
+  density: 0.0      
+  energy: 0.0      
+  temperature: 1.0
+
+
+Output:
+  time_diag: 0.4
