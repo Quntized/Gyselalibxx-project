@@ -111,8 +111,18 @@ The NS-Transformer model will learn the function mapping for future time step. W
 
 In this specific case, as plasma waves fluctuations get bigger when energy is transfer from particles to waves, we have taken to minimize this:
 
-$$\int_{0}^{L} |\nabla \phi|^2 dx$$
+$$ J := \int_{0}^{L} |\nabla \phi|^2 dx$$
 
 NS-Transformer will take state in encoder and control in decoder, and can adapt the changing nature of data which are the adaptation of mean and variance. 
 
 Here, specifically, we have taken mean_ne, mean_ni, mean_Te, mean_Ti,$$ \int E^2 dx $$ as state and s0, s2, sk, nu_a, n_g, T_g as the control. 
+The RL will try to minimise the J to learn the optimal policy to minimse fluctuations which will driven by instabilities.
+
+
+
+
+
+
+The results and poster will soon be present. Currently, I am running the simulation in my University Lab.
+
+Thank you!!
