@@ -64,8 +64,19 @@ $$
 ## 2.  Kinetic Instabilities
 
 # Two-stream Instability
-The two-stream instability is another fundamental kinetic instability driven by ** counter-propagating electron beams ** in plasma. Both electron and ion have the 
+The two-stream instability is another fundamental kinetic instability driven by ** counter-propagating electron beams ** in plasma. Both electron and ion have the initial distribution function which is the maxwellian. When two beams of charged particles interpenetrate, they are highly susceptible to microscopic fluctuations.
 
+Now, particles moving initially slightly slower than the wave, the velocity will get closer to the phase velocity, so that it will keep interacting with a long time. On top of that, they will get kinetic energy as
+m(v0 + δv ) /2 > mv0 /2
+Conversely, those which are decelerated will move further away from the resonance, hence interacting weakly with the wave. In summary, and because energy transfer is due to resonant interactions between
+waves and particles, most of the energy transfer will go from the wave to these slow particles.
+Performing the same analysis for particles moves slightly faster would lead to the opposite conclusion. Most of the energy goes from those "fast" particles to the wave. 
+Then, to decide whether the wave ultimately gains or looses energy, one has to count the number of particles of each category.If the equilibrium distribution function is a Maxwellian,
+then there are more particles slower than the wave than faster. As a result, the net balance will
+be in favor of the particles, and the wave will loose energy. This corresponds to Landau damping.
+Conversely, if the equilibrium distribution function presents a bump on the tail characterizing an
+inversion of population at the phase velocity, then more energy will be transfered to the wave.
+Such a regime leads to the so-called bump-on-tail instability.
 ## 3. Optimal control
  
 
