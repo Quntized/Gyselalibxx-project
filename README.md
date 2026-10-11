@@ -64,18 +64,21 @@ $$
 ## 2.  Kinetic Instabilities
 
 # Bump-on-tail instability
+ The Bump-on-tail instability develops when the equilibrium distribution function presents a positive slope with respect to velocity in the tail. It can occur when a low density plasma beam of finite mean velocity interacts with the bulk plasma, at rest. Suppose, the high-energy electrons are injected into the thermalized plasma, which which results in a non-maxwellian distribution with a **"bump"(High-energy-tail)** in velocity space. We consider, an equilibrium made of 2 maxwellian $f_{eq} = f_1 + f_2$. The bulk plasma particles f1 at rest, of density $n_1 = (1 - \varepsilon)$ and temperature unity, and beam f2 of constant velocit v0, of small density $n_2 = \varepsilon$ and temperature $T_0$ with $\varepsilon$ a small
+ positive parameter, ranging from $0 \le \varepsilon \le 1$
 
-The Bump-on-tail instability develops when the equilibrium distribution function presents a positive slope with respect to velocity in the tail. It can occur when a low density plasma beam of finite mean velocity interacts with the bulk plasma, at rest. Suppose, the high-energy electrons are injected into the thermalized plasma, which which results in a non-maxwellian distribution with a **"bump"(High-energy-tail)**  in velocity space. 
-We consider, an equilibrium made of 2 maxwellian $$ f_\eq = f_\1 + f_\2 $$. The bulk plasma particles f1 at rest, of density $$ n_\1 = (1 - \eps) $$ and temperature unity, and beam f2 of constant velocit v0, of small density $$ n_\2 = \eps $$ and temperature $$T_\0$$ with $$ \eps $$ a small positive parameter, ranging from $$ 0 <= \eps <= 1$$ 
 $$
 f_1 = \frac{1 - \varepsilon}{\sqrt{2\pi}} \exp\left\{ \frac{-v^2}{2} \right\}
 $$
-
+ 
 $$
 f_2 = \frac{\varepsilon}{\sqrt{2\pi T_0}} \exp\left\{ \frac{-(v - v_0)^2}{2T_0} \right\}
 $$
-This bump introduces a positive slope of ∂ f / ∂ v > 0. Which enables **wave-particle resonance** and **the growth of Langmuir waves** . This transfers the energy from particles to wave, results in a growth of the wave perturbation and is oscillated at the nonlinear stage.
-
-
+ 
+This bump introduces a positive slope of $\partial f / \partial v > 0$. Which enables **wave-particle resonance** and **the growth of Langmuir waves** . This transfers the energy from particles to wave, results in a growth of the wave perturbation and is oscillated at the nonlinear stage.
+ 
 ## 3. Optimal control
+ 
+
+
 
