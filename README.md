@@ -91,10 +91,28 @@ $$ S_{\mathrm{v}}(v) = \left\{ s_0 \left( \frac{3}{2} - \frac{v^2}{2T_{\mathrm{s
 
 The Lx is simulation box length. The T_sc is constant source temperature. The s0, s2 and sk these are the inputs to the code that allows to define the properties of the source. 
 
+# Krook Source Adaptive
+The Bhatnagar-Gross-Krook operators, which can act as sources or sinks of particles, momentum and energy. They can be written as:
+$$ \mathcal{S}(f_a) = -\nu_a\mathcal{M} (f_a - g). $$
 
+The M here is the same as kinetic source which is to active the intend region, provided by the simulation time. The target distribution function g, which is a maxwellian characterized by a constant density n_g and temperature T_g . The normalized expression is:
+
+$$g(v) = \frac{n_g}{\sqrt{2\pi T_g}} \exp \left( -\frac{v^2}{2T_g} \right).$$
+
+The nu_a coefficient sets the magnitude of the operator. It can be wither constant, or depend on the time ans space variables.
+
+However, in this case, the coefficient is treated as, for electron it can adapt at each time step and spatial position and for ion it assumes to be constant.
 
 ## 3. Optimal control
  
+Both the kinetic source, krook source adaptive are having great oppurtunity to control the instabilities. However, the prime intent here is, instead of slow simulation which will takes time to control the instabilities. The Transformer model and Reinforcement Learning are present great oppurtunity to run simulation at a faster, and for later, can be controll the instabilities efficiently, which can adapt in physical the problematic plasma instabilities cases.
 
+The NS-Transformer model will learn the function mapping for future time step. We will use that phenomena to predict future time steps. This can be seen by RL (e.g. DDPG) and can alter the action for better rewards.
 
+In this specific case, as plasma waves fluctuations get bigger when energy is transfer from particles to waves, we have taken to minimize this:
 
+$$\int_{0}^{L} |\nabla \phi|^2 dx$$
+
+NS-Transformer will take state in encoder and control in decoder, and can adapt the changing nature of data which are the adaptation of mean and variance. 
+
+Here, specifically, we have taken mean_ne, mean_ni, mean_Te, mean_Ti,$$ \int E^2 dx $$ as state and s0, s2, sk, nu_a, n_g, T_g as the control. 
