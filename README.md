@@ -66,7 +66,7 @@ $$
 # Bump-on-tail instability
 
 The Bump-on-tail instability develops when the equilibrium distribution function presents a positive slope with respect to velocity in the tail. It can occur when a low density plasma beam of finite mean velocity interacts with the bulk plasma, at rest. Suppose, the high-energy electrons are injected into the thermalized plasma, which which results in a non-maxwellian distribution with a **"bump"(High-energy-tail)**  in velocity space. 
-We consider, an equilibrium made of 2 maxwellian $$ f_/eq = f_\1 + f_\2 $$. The bulk plasma particles f1 at rest, of density $$ n_\1 = (1 - /eps) $$ and temperature unity, and beam f2 of constant velocit v0, of small density $$ n_\2 = \eps $$ and temperature $$T_\0$$ with $$ \eps $$ a small positive parameter, ranging from $$ 0 <= \eps <= 1$$ 
+We consider, an equilibrium made of 2 maxwellian $$ f_\eq = f_\1 + f_\2 $$. The bulk plasma particles f1 at rest, of density $$ n_\1 = (1 - \eps) $$ and temperature unity, and beam f2 of constant velocit v0, of small density $$ n_\2 = \eps $$ and temperature $$T_\0$$ with $$ \eps $$ a small positive parameter, ranging from $$ 0 <= \eps <= 1$$ 
 $$
 f_1 = \frac{1 - \varepsilon}{\sqrt{2\pi}} \exp\left\{ \frac{-v^2}{2} \right\}
 $$
