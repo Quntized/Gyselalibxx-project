@@ -83,10 +83,11 @@ $$f_0(v) = \frac{n_0}{2\sqrt{2\pi v_{th}^2}} \left[ \exp \left( -\frac{(v - v_0)
 Each is given in gyselalibxx as a allfequilibrium, which contains both the electron and ion distribution function.
 # Kinetic source
 The source term given in boltzman equation. The first we will consider is kinetic source. Where it allows to inject density and energy independently.
-$$S_{\mathrm{sc}}(x, v_a) = s_{\mathrm{k}} \frac{\mathcal{M}_{\mathrm{sc}}(x)}{\int_0^{L_x} \mathcal{M}_{\mathrm{sc}}(x) \, dx} S_{\mathrm{v}}(v_a)$$
+$$ S_{\mathrm{sc}}(x, v_a) = s_{\mathrm{k}} \frac{\mathcal{M}_{\mathrm{sc}}(x)}{\int_0^{L_x} \mathcal{M}_{\mathrm{sc}}(x) \, dx} S_{\mathrm{v}}(v_a) $$
 
 Here, M defines the spatial extent of the source, most of the time it has a hyperbolic tangent expression. And S_v can be written as:
-$$S_{\mathrm{v}}(v) = \left\{ s_0 \left( \frac{3}{2} - \frac{v^2}{2T_{\mathrm{sc}}} \right) + s_2 \left( -\frac{1}{2} + \frac{v^2}{2T_{\mathrm{sc}}} \right) \right\} \frac{1}{\sqrt{2\pi T_{\mathrm{sc}}}} e^{-\frac{v^2}{2T_{\mathrm{sc}}}}$$
+
+$$ S_{\mathrm{v}}(v) = \left\{ s_0 \left( \frac{3}{2} - \frac{v^2}{2T_{\mathrm{sc}}} \right) + s_2 \left( -\frac{1}{2} + \frac{v^2}{2T_{\mathrm{sc}}} \right) \right\} \frac{1}{\sqrt{2\pi T_{\mathrm{sc}}}} e^{-\frac{v^2}{2T_{\mathrm{sc}}}} $$
 
 The Lx is simulation box length. The T_sc is constant source temperature. The s0, s2 and sk these are the inputs to the code that allows to define the properties of the source. 
 
