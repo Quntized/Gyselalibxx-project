@@ -30,27 +30,27 @@ SpeciesInfo:
   perturb_mode: 1
 
 Algorithm:
-  deltat: 0.0025
-  equilibrium: "bump_on_tail"
-  nbiter: 20000
+  deltat: 0.025
+  equilibrium: "maxwellian"
+  nbiter: 2000
   #A: 1.2
   #w: 2.3
   
 Collisions:
-  nustar0: 0.1
+  nustar0: 0.00001
 
-KrookConstant:
+KrookSource:
   type: "Sink"      
   extent: 0.1      
-  stiffness: 5.0    
-  amplitude: 10.0   
+  stiffness: 2.0    
+  amplitude: 1.0   
   density: 1.0      
   temperature: 1.0  
 
 
 KineticSource:
   extent: 0.2      
-  stiffness: 5.0   
+  stiffness: 2.0   
   amplitude: 1.0   
   density: 0.0      
   energy: 0.0      

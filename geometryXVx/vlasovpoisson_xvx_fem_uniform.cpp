@@ -22,6 +22,7 @@
 #include "input.hpp"
 #include "maxwellianequilibrium.hpp"
 #include "neumann_spline_quadrature.hpp"
+#include "spline_quadrature.hpp"
 #include "output.hpp"
 #include "paraconfpp.hpp"
 #include "params.yaml.hpp"
@@ -106,22 +107,22 @@ int main(int argc, char** argv)
     int const nbiter = static_cast<int>(PCpp_int(conf_gyselalibxx, ".Algorithm.nbiter"));
     double const nustar0 = PCpp_double(conf_gyselalibxx, ".Collisions.nustar0");
     // --> Krook Adaptive parameters
-    std::string krook_type_str = PCpp_string(conf_gyselalibxx, ".KrookConstant.type");
+    std::string krook_type_str = PCpp_string(conf_gyselalibxx, ".KrookSource.type");
     RhsType krook_type = (krook_type_str == "Source") ? RhsType::Source : RhsType::Sink;
-    double const krook_extent = PCpp_double(conf_gyselalibxx, ".KrookConstant.extent");
-    double const krook_stiffness = PCpp_double(conf_gyselalibxx, ".KrookConstant.stiffness");
-    double const krook_amplitude = PCpp_double(conf_gyselalibxx, ".KrookConstant.amplitude");
-    double const krook_density = PCpp_double(conf_gyselalibxx, ".KrookConstant.density");
-    double const krook_temperature = PCpp_double(conf_gyselalibxx, ".KrookConstant.temperature");
+    double const extent = PCpp_double(conf_gyselalibxx, ".KrookSource.extent");
+    double const krook_stiffness = PCpp_double(conf_gyselalibxx, ".KrookSource.stiffness");
+    double const krook_amplitude = PCpp_double(conf_gyselalibxx, ".KrookSource.amplitude");
+    double const krook_density = PCpp_double(conf_gyselalibxx, ".KrookSource.density");
+    double const krook_temperature = PCpp_double(conf_gyselalibxx, ".KrookSource.temperature");
 
     // --> Kinetic Source (RL Actuator) parameters
-    double const kinetic_extent = PCpp_double(conf_gyselalibxx, ".KineticSource.extent");
+    //double const kinetic_extent = PCpp_double(conf_gyselalibxx, ".KineticSource.extent");
     double const kinetic_stiffness = PCpp_double(conf_gyselalibxx, ".KineticSource.stiffness");
     double const kinetic_amplitude = PCpp_double(conf_gyselalibxx, ".KineticSource.amplitude");
     double const kinetic_density = PCpp_double(conf_gyselalibxx, ".KineticSource.density");
     double const kinetic_energy = PCpp_double(conf_gyselalibxx, ".KineticSource.energy");
     double const kinetic_temperature = PCpp_double(conf_gyselalibxx, ".KineticSource.temperature");    
-    // --> Output info
+
     double const time_diag = PCpp_double(conf_gyselalibxx, ".Output.time_diag");
 
     int const nbstep_diag = int(time_diag / deltat);
@@ -134,16 +135,17 @@ int main(int argc, char** argv)
     SplitVlasovSolver const vlasov(advection_x, advection_vx);
 
     FEM1DPoissonSolver fem_solver(spline_interpolation_x);
-    DFieldMemVx const quadrature_coeffs = neumann_spline_quadrature_coefficients<
-            Kokkos::DefaultExecutionSpace>(mesh_vx, spline_interpolation_vx.get_builder());
+    DFieldMemVx const quadrature_coeffs = neumann_spline_quadrature_coefficients<Kokkos::DefaultExecutionSpace>(mesh_vx, spline_interpolation_vx.get_builder());
+    DFieldMemX const quadrature_coeffs_E = spline_quadrature_coefficients<Kokkos::DefaultExecutionSpace>(mesh_x, spline_interpolation_x.get_builder());
+     
     ChargeDensityCalculator rhs(get_field(quadrature_coeffs));
     QNSolver const poisson(fem_solver, rhs);
     CollisionsIntra collisions_intra(meshSpXVx, nustar0);
     CollisionsInter collisions_inter(meshSpXVx, nustar0);
-    KrookSourceConstant krook_constant(mesh_x, mesh_vx, krook_type, krook_extent, krook_stiffness, krook_amplitude, krook_density, krook_temperature);
-    KineticSource kinetic_source(mesh_x, mesh_vx, kinetic_extent, kinetic_stiffness, kinetic_amplitude, kinetic_density, kinetic_energy, kinetic_temperature);
+    KrookSourceAdaptive krook_source(mesh_x, mesh_vx, krook_type, extent, krook_stiffness, krook_amplitude, krook_density, krook_temperature);
+    KineticSource kinetic_source(mesh_x, mesh_vx, extent, kinetic_stiffness, kinetic_amplitude, kinetic_density, kinetic_energy, kinetic_temperature);
     
-    PredCorr const predcorr(vlasov, poisson, collisions_inter, collisions_intra, krook_constant, kinetic_source);
+    PredCorr const predcorr(vlasov, poisson, kinetic_source, krook_source, collisions_intra, collisions_inter);
     // Starting the code
     ddc::expose_to_pdi("Nx_spline_cells", ddc::discrete_space<BSplinesX>().ncells());
     ddc::expose_to_pdi("Nvx_spline_cells", ddc::discrete_space<BSplinesVx>().ncells());
@@ -161,7 +163,7 @@ int main(int argc, char** argv)
 
     steady_clock::time_point const start = steady_clock::now();
 
-    predcorr(get_field(allfdistribu), time_start, deltat, get_const_field(quadrature_coeffs),nbiter);
+    predcorr(get_field(allfdistribu), time_start, deltat, get_const_field(quadrature_coeffs), get_const_field(quadrature_coeffs_E), nbiter);
 
     steady_clock::time_point const end = steady_clock::now();
 
