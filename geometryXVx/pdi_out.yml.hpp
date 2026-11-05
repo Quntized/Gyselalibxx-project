@@ -62,6 +62,7 @@ data:
     type: array
     subtype: double
     size: [ '$temperature_extents[0]', '$temperature_extents[1]' ]
+  int_E_sqrd_dx: double
 
 
 
@@ -81,12 +82,12 @@ plugins:
       on_event: [initial_state]
       collision_policy: replace_and_warn
       write: [Nx_spline_cells, Nvx_spline_cells, MeshX, MeshVx, nbstep_diag, Nkinspecies, fdistribu_charges,fdistribu_masses, fdistribu_eq]
-    - file: 'GYSELALIBXX_${iter_saved:05}.h5'
+    - file: 'output/GYSELALIBXX_${iter_saved:05}.h5'
       on_event: [iteration, last_iteration]
       when: '${iter} % ${nbstep_diag} = 0'
       collision_policy: replace_and_warn
-      write: [time_saved, fdistribu, electrostatic_potential, density, mean_velocity, temperature]
-    - file: 'GYSELALIBXX_${iter_start:05}.h5'
+      write: [time_saved, fdistribu, electrostatic_potential, density, mean_velocity, temperature, int_E_sqrd_dx]
+    - file: 'output/GYSELALIBXX_${iter_start:05}.h5'
       on_event: restart
       read: [time_saved, fdistribu]
 )PDI_CFG";
