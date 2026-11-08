@@ -47,6 +47,8 @@ data:
     type: array
     subtype: double
     size: [ '$electrostatic_potential_extents[0]' ]
+
+  # 2D Fluid Moments [Species, GridX]
   density_extents: { type: array, subtype: int64, size: 2 }
   density:
     type: array
@@ -62,31 +64,46 @@ data:
     type: array
     subtype: double
     size: [ '$temperature_extents[0]', '$temperature_extents[1]' ]
-  int_E_sqrd_dx: double
 
-
+  # 1D Species-Averaged Moments [Species]
+  total_density_sp_extents: { type: array, subtype: int64, size: 1 }
+  total_density_sp:
+    type: array
+    subtype: double
+    size: [ '$total_density_sp_extents[0]' ]
+  avg_velocity_sp_extents: { type: array, subtype: int64, size: 1 }
+  avg_velocity_sp:
+    type: array
+    subtype: double
+    size: [ '$avg_velocity_sp_extents[0]' ]
+  avg_temperature_sp_extents: { type: array, subtype: int64, size: 1 }
+  avg_temperature_sp:
+    type: array
+    subtype: double
+    size: [ '$avg_temperature_sp_extents[0]' ]
+  int_E2: double
 
 plugins:
   set_value:
     on_init:
       - share:
-        - iter_saved: 0
+          - iter_saved: 0
     on_data:
       iter:
         - set:
-          - iter_saved: '${iter_start} + ${iter}/${nbstep_diag}'
+            - iter_saved: '${iter_start} + ${iter}/${nbstep_diag}'
     on_finalize:
       - release: [iter_saved]
   decl_hdf5:
     - file: 'output/GYSELALIBXX_initstate.h5'
       on_event: [initial_state]
       collision_policy: replace_and_warn
-      write: [Nx_spline_cells, Nvx_spline_cells, MeshX, MeshVx, nbstep_diag, Nkinspecies, fdistribu_charges,fdistribu_masses, fdistribu_eq]
+      write: [Nx_spline_cells, Nvx_spline_cells, MeshX, MeshVx, nbstep_diag, Nkinspecies, fdistribu_charges, fdistribu_masses, fdistribu_eq]
     - file: 'output/GYSELALIBXX_${iter_saved:05}.h5'
       on_event: [iteration, last_iteration]
       when: '${iter} % ${nbstep_diag} = 0'
       collision_policy: replace_and_warn
-      write: [time_saved, fdistribu, electrostatic_potential, density, mean_velocity, temperature, int_E_sqrd_dx]
+      write: [time_saved, fdistribu, electrostatic_potential, density, mean_velocity, temperature, total_density_sp, avg_velocity_sp, avg_temperature_sp, int_E2]
     - file: 'output/GYSELALIBXX_${iter_start:05}.h5'
       on_event: restart
       read: [time_saved, fdistribu]
