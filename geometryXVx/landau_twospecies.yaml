@@ -10,9 +10,9 @@ SpeciesInfo:
 - charge: -1.
   mass: 0.0005
   density_eq: 1.
-  epsilon_bot: 0.1
-  temperature_bot: 0.2
-  mean_velocity_bot: 3.8
+  #epsilon_bot: 0.1
+  #temperature_bot: 0.2
+  #mean_velocity_bot: 3.8
   temperature_eq: 1.
   mean_velocity_eq: 0.
   perturb_amplitude: 0.01
@@ -21,9 +21,9 @@ SpeciesInfo:
 - charge: 1.
   mass: 2.
   density_eq: 1.
-  epsilon_bot: 0.1
-  temperature_bot: 0.2
-  mean_velocity_bot: 3.8
+  #epsilon_bot: 0.1
+  #temperature_bot: 0.2
+  #mean_velocity_bot: 3.8
   temperature_eq: 1.
   mean_velocity_eq: 0.
   perturb_amplitude: 0.01
@@ -31,30 +31,30 @@ SpeciesInfo:
 
 Algorithm:
   deltat: 0.0025
-  equilibrium: "bump_on_tail"
-  nbiter: 20000
+  equilibrium: "maxwellian"
+  nbiter: 24000
   #A: 1.2
   #w: 2.3
   
 Collisions:
-  nustar0: 0.1
+  nustar0: 0.00001
 
-KrookConstant:
-  type: "Sink"      
-  extent: 0.1      
-  stiffness: 5.0    
-  amplitude: 10.0   
-  density: 1.0      
-  temperature: 1.0  
+#KrookSource:
+  #type: "Sink"      
+  #extent: 0.1      
+  #stiffness: 2.0    
+  #amplitude: 1.0   
+  #density: 1.0      
+  #temperature: 1.0  
 
 
 KineticSource:
   extent: 0.2      
-  stiffness: 5.0   
+  stiffness: 2.0   
   amplitude: 1.0   
-  density: 0.0      
-  energy: 0.0      
+  density: 1.0     
+  energy: 1.0    
   temperature: 1.0
 
 Output:
-  time_diag: 1.0
+  time_diag: 1
